@@ -1,0 +1,28 @@
+github:
+  prebuilds:
+    master: true
+    branches: true
+    pullRequests: true
+    pullRequestsFromForks: true
+    addCheck: false
+    addComment: false
+    addBadge: true
+vscode:
+  extensions:
+    - steoates.autoimport
+    - coenraads.bracket-pair-colorizer-2
+    - pustelto.bracketeer
+    - mhutchie.git-graph
+    - eamodio.gitlens
+    - dsznajder.es7-react-js-snippets
+    - golang.go
+    - bradlc.vscode-tailwindcss
+tasks:
+  - name: regen-ledger
+    before: git clone https://github.com/onezoomin/regen-ledger
+    init: cd regen-ledger && git pull && git checkout divvy && make -k install && scripts/start_testnode.sh
+    command: cd regen-ledger && build/regen/start
+  - name: allocation-ui
+    before: git clone https://github.com/onezoomin/allocation-ui && curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+    init: cd allocation-ui && git pull && pnpm i
+    command: cd allocation-ui && pnpm dev
