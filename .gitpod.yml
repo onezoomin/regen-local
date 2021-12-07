@@ -20,9 +20,10 @@ vscode:
 tasks:
   - name: regen-ledger
     before: cd regen-ledger || git clone https://github.com/onezoomin/regen-ledger
-    init: cd /workspace/regen-local/regen-ledger && git pull && git checkout divvy && make -k install && scripts/start_testnode.sh
-    command: cd /workspace/regen-local/regen-ledger && build/regen/start
+    init: cd /workspace/regen-local/regen-ledger && git pull && git checkout divvy && make -k install && scripts/start_testnode.sh | tee start_testnode.log 
+    command: cd /workspace/regen-local/regen-ledger && build/regen start
   - name: allocation-ui
     before: curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm && cd allocation-ui || git clone https://github.com/onezoomin/allocation-ui 
     init: cd /workspace/regen-local/allocation-ui && git pull && pnpm i
     command: cd /workspace/regen-local/allocation-ui && pnpm dev
+    openMode: split-right
