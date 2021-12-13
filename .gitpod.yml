@@ -1,3 +1,30 @@
+ports:
+  - port: 3000
+    visibility: public
+    onOpen: open-browser
+  - port: 26657
+    visibility: public
+  - port: 1317
+    visibility: public
+    
+tasks:
+  - name: regen-ledger
+    before: |
+      cd regen-ledger || (git clone https://github.com/onezoomin/regen-ledger && cd regen-ledger)
+      echo 'alias regd="regen --home /workspace/regen-local/.regen"' >> ~/.bashrc.d/aliases
+    init: |
+      cd /workspace/regen-local/ && git pull && git checkout divvy
+      make -k install && scripts/start_testnode.sh | tee /workspace/start_testnode$(date '+%Y-%m-%d_+%T').log && 
+      mv $HOME/.regen /workspace/regen-local/
+    command: regen --home /workspace/regen-local/.regen start
+  - name: allocation-ui
+    before: |
+      curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+      cd allocation-ui || git clone https://github.com/onezoomin/allocation-ui 
+    init: cd /workspace/regen-local/allocation-ui && git pull && pnpm i
+    command: cd /workspace/regen-local/allocation-ui && pnpm dev --force
+    openMode: split-right
+
 github:
   prebuilds:
     master: true
@@ -7,6 +34,7 @@ github:
     addCheck: false
     addComment: false
     addBadge: true
+    
 vscode:
   extensions:
     - steoates.autoimport
@@ -16,19 +44,6 @@ vscode:
     - eamodio.gitlens
     - dsznajder.es7-react-js-snippets
     - golang.go
-    - bradlc.vscode-tailwindcss
+    - voorjaar.windicss-intellisense
     - dbaeumer.vscode-eslint
-tasks:
-  - name: regen-ledger
-    before: cd regen-ledger || git clone https://github.com/onezoomin/regen-ledger && cd regen-ledger
-    init: |
-      git pull && git checkout divvy
-      make -k install && scripts/start_testnode.sh | tee start_testnode.log 
-    command: regen start
-  - name: allocation-ui
-    before: |
-      curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
-      cd allocation-ui || git clone https://github.com/onezoomin/allocation-ui 
-    init: cd /workspace/regen-local/allocation-ui && git pull && pnpm i
-    command: cd /workspace/regen-local/allocation-ui && pnpm dev --force
-    openMode: split-right
+    - k--kato.intellij-idea-keybindings
