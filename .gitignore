@@ -2,3 +2,4 @@ allocation-ui
 regen-ledger
 .regen
 .DS_Store
+*.log
