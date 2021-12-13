@@ -14,7 +14,7 @@ tasks:
       echo 'alias regd="regen --home /workspace/regen-local/.regen"' >> ~/.bashrc.d/aliases
     init: |
       cd /workspace/regen-local/regen-ledger && git pull --ff-only && git checkout divvy
-      make -k install && scripts/start_testnode.sh | tee /workspace/regen-local/start_testnode$(date '+%Y-%m-%d_+%T').log && 
+      make -k install && scripts/start_testnode.sh 2>&1 | tee /workspace/regen-local/start_testnode$(date '+%Y-%m-%d_+%T').log && 
       mv $HOME/.regen /workspace/regen-local/
     command: regen --home /workspace/regen-local/.regen start
   - name: allocation-ui
